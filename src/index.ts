@@ -1,2 +1,2 @@
-export * from './lib/async';
-export * from './lib/number';
+export * from './lib/trace-block';
+export { BlockTrace, TransactionTrace, TraceItem } from './lib/block-trace.type';
