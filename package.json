@@ -66,6 +66,7 @@
     "build/module",
     "!**/*.spec.*",
     "!**/*.json",
+    "package.json",
     "CHANGELOG.md",
     "LICENSE",
     "README.md"
