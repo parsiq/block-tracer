@@ -1,21 +1,16 @@
-import { BlockBase, BlockHeader, BlockTrace, TraceItem, TransactionBase, TransactionTrace } from './block-trace.type';
-
-export type Reward = {
-  readonly coinbase: string;
-  readonly reward: string;
-};
+import {
+  BlockBase,
+  BlockHeader,
+  BlockReward,
+  BlockTrace,
+  TraceItem,
+  TransactionBase,
+  TransactionTrace,
+} from './block-trace.type';
 
 const BlockHeader = {
   fromTrace({
-    gasUsed,
-    sha3Uncles,
-    extraData,
-    mixHash,
-    nonce,
-    logsBloom,
-    stateRoot,
-    transactionsRoot,
-    receiptsRoot,
+    header: { gasUsed, sha3Uncles, extraData, mixHash, nonce, logsBloom, stateRoot, transactionsRoot, receiptsRoot },
   }: BlockTrace): BlockHeader {
     return {
       gasUsed,
@@ -31,60 +26,34 @@ const BlockHeader = {
   },
 };
 
-export type Logger = {
-  log: (...args: any[]) => void;
-  error: (...args: any[]) => void;
-};
-
-export type CustomItemTracer<T> = (options: {
-  logger: Logger;
-}) => (payload: {
-  item: TraceItem;
-  tx: Transaction<T>;
-  block: Block<T>;
-  parent: Message;
-  logger: Logger;
-  includeFailed: boolean;
-  makeMessage: MakeMessage;
-}) => Generator<T>;
-
-export type MakeMessage = (
-  parent: Message,
-  props: Partial<Message> & Pick<Message, 'contract' | 'tag' | 'native'>
-) => Message;
-
 export type TraceOptions<T> = {
-  logger: Logger;
-  custom: CustomItemTracer<T>;
   includeFailed: boolean;
-  decoder: (item: TraceItem, contract: string) => any;
+  decoder: (item: TraceItem, contract: string) => T;
 };
 
 export type Block<T> = BlockBase & {
   readonly number: number;
   readonly hash: string;
   readonly parentHash: string;
+  readonly coinbase: string;
   readonly header: BlockHeader;
-  readonly rewards: readonly Reward[];
+  readonly rewards: readonly BlockReward[];
   readonly traceOptions: TraceOptions<T>;
 };
 
 const Block = {
   fromTrace<T>(blockTrace: BlockTrace, traceOptions: TraceOptions<T>): Block<T> {
     const header = BlockHeader.fromTrace(blockTrace);
-    const rewards: Reward[] = [{ coinbase: blockTrace.coinbase, reward: blockTrace.minerReward }].concat(
-      blockTrace.uncleRewards.map(({ reward, uncleCoinbase }) => ({ coinbase: uncleCoinbase, reward }))
-    );
 
     return {
       header,
-      rewards,
-      number: blockTrace.blockNumber,
-      hash: blockTrace.blockHash,
-      parentHash: blockTrace.parentBlockHash,
-      coinbase: blockTrace.coinbase,
-      difficulty: blockTrace.difficulty,
-      timestamp: blockTrace.timestamp,
+      rewards: blockTrace.rewards,
+      number: blockTrace.header.blockNumber,
+      hash: blockTrace.header.blockHash,
+      parentHash: blockTrace.header.parentBlockHash,
+      coinbase: blockTrace.rewards[0]?.beneficiary,
+      difficulty: blockTrace.header.difficulty,
+      timestamp: blockTrace.header.timestamp,
       traceOptions,
     };
   },
@@ -93,25 +62,21 @@ const Block = {
 export const CONTEXT = Symbol('transaction context');
 
 export type TraceMessage<T> = {
-  readonly msg: Message | T;
+  readonly msg: Message<T>;
   readonly tx: Transaction<T>;
-  readonly index: number;
   readonly block: Block<T>;
 };
 
-export type Message = {
+export type Message<T> = {
   contract: string;
   effective: boolean;
-  parent: Message;
+  parent: Message<T>;
   internal: boolean;
   level: number;
   sender: string;
   index: number;
-  native: {
-    op: TraceItem['op'];
-    decoded: any;
-  };
-  tag: TraceItem['tag'];
+  op: TraceItem['op'];
+  decoded: T;
   data?: string;
   value?: string;
 };
@@ -132,7 +97,7 @@ export type TransactionContext<T> = {
 
 const Transaction = {
   fromTrace<T>(
-    { gasLimit, gasPrice, gasUsed, minerReward, nonce, origin, sigR, sigS, sigV, txHash }: TransactionTrace,
+    { gasLimit, gasPrice, gasUsed, fee, nonce, origin, sigR, sigS, sigV, txHash }: TransactionTrace,
     context: TransactionContext<T>
   ): Transaction<T> {
     return {
@@ -141,7 +106,7 @@ const Transaction = {
       gasUsed,
       origin,
       nonce,
-      minerReward,
+      fee,
       sigR,
       sigS,
       sigV,
@@ -153,13 +118,6 @@ const Transaction = {
   },
 };
 
-function NoCustomEvents({ logger }: { logger: Logger }) {
-  // eslint-disable-next-line require-yield
-  return function* (item: any) {
-    logger.error('Processing custom items is not configured', item);
-  };
-}
-
 function NoDecoder() {
   return null;
 }
@@ -167,8 +125,6 @@ function NoDecoder() {
 export function traceBlock<T = never>(blockTrace: BlockTrace, traceOptions: Partial<TraceOptions<T>> = {}) {
   const options: TraceOptions<T> = Object.assign(
     {
-      custom: NoCustomEvents,
-      logger: console,
       includeFailed: false,
       decoder: NoDecoder,
     },
@@ -190,7 +146,7 @@ export function traceBlock<T = never>(blockTrace: BlockTrace, traceOptions: Part
   );
 }
 
-type FirstLevelMessage = Message & {
+type FirstLevelMessage = Message<never> & {
   contract: string;
   effective: true;
   parent: null;
@@ -204,11 +160,10 @@ export function traceTx<T>(
 ): readonly TraceMessage<T>[] {
   const context = tx[CONTEXT];
 
-  const { item, index, nextIndex, block } = context;
-  const { logger, custom, includeFailed, decoder } = { ...block.traceOptions, ...transactionTraceOptions };
-  const customProcess = custom({ logger });
+  const { item, nextIndex, block } = context;
+  const { includeFailed, decoder } = { ...block.traceOptions, ...transactionTraceOptions };
 
-  let msg: Message = {
+  let msg: Message<T> = {
     contract: tx.origin,
     effective: true,
     parent: null,
@@ -216,7 +171,10 @@ export function traceTx<T>(
     level: -1,
   } as FirstLevelMessage;
 
-  function makeMessage<U extends Pick<Message, 'contract' | 'tag' | 'native'>>(parent: Message, props: U): Message & U {
+  function makeMessage<U extends Pick<Message<T>, 'contract' | 'op' | 'decoded'>>(
+    parent: Message<T>,
+    props: U
+  ): Message<T> & U {
     return {
       effective: parent.effective,
       ...props,
@@ -248,43 +206,25 @@ export function traceTx<T>(
   }
 
   function* process(item: TraceItem): Generator<TraceMessage<T>> {
-    if (item.tag === 'NATIVE') {
-      const contract = getContract(item);
-      msg = makeMessage(msg, {
-        effective: msg.effective && 'success' in item ? item.success : true,
-        contract,
-        native: {
-          op: item.op,
-          decoded: decoder(item, contract),
-        },
-        tag: item.tag,
-        data: 'data' in item ? item.data : undefined,
-        value: 'value' in item ? item.value : undefined,
-      });
-      try {
-        if (msg.effective || includeFailed) {
-          yield { msg, tx, index, block };
-          const subItems = 'items' in item ? item.items : [];
-          for (const subItem of subItems) {
-            yield* process(subItem);
-          }
+    const contract = getContract(item);
+    msg = makeMessage(msg, {
+      effective: msg.effective && ('result' in item ? item.result.success : true),
+      contract,
+      op: item.op,
+      decoded: decoder(item, contract),
+      data: 'data' in item ? item.data : undefined,
+      value: 'value' in item ? item.value : undefined,
+    });
+    try {
+      if (msg.effective || includeFailed) {
+        yield { msg, tx, block };
+        const subItems = 'items' in item ? item.items : [];
+        for (const subItem of subItems) {
+          yield* process(subItem);
         }
-      } finally {
-        msg = msg.parent;
       }
-    } else {
-      const parent = msg;
-      for (const msg of customProcess({
-        item,
-        tx,
-        block,
-        parent,
-        logger,
-        includeFailed,
-        makeMessage,
-      })) {
-        yield { msg, tx, index, block };
-      }
+    } finally {
+      msg = msg.parent;
     }
   }
 
