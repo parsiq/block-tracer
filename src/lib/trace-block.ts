@@ -193,7 +193,7 @@ export function traceTx<T>(
       case 'LOG2':
       case 'LOG3':
       case 'LOG4':
-        return msg.internal ? msg.parent.contract : msg.contract;
+        return msg.contract;
       case 'SELFDESTRUCT':
         return item.beneficiary;
       case 'CALL':

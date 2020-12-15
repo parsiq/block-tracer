@@ -18,11 +18,11 @@ test('trace', (t) => {
       console.log('transactionIndex:', tx.index, 'msgLevel:', msg.level, 'msgIndex:', msg.index);
     }
   }
-  t.is(count, 14);
+  t.is(count, 15);
 });
 
 test('traces events', (t) => {
-  t.plan(1);
+  t.plan(2);
 
   const traceOptions = {
     decoder: (item: TraceItem, contract: string) => {
@@ -36,6 +36,18 @@ test('traces events', (t) => {
           validator: '0x'.concat(item.topics[1].slice(-40)),
           amount: parseInt(item.data, 16),
           contract: 'BSCValidatorSet',
+          codeAddress: contract,
+        };
+      }
+
+      if (
+        item.op === 'LOG1' &&
+        item.topics[0] === '0x1111111111111111111111111111111111111111111111111111111111111111'
+      ) {
+        return {
+          event: 'CustomEvent',
+          data: item.data,
+          contract,
         };
       }
 
@@ -46,12 +58,21 @@ test('traces events', (t) => {
   for (const transaction of traceBlock(blockTraceFixture as BlockTrace, traceOptions)) {
     for (const { msg } of traceTx(transaction)) {
       if (msg.decoded !== null) {
-        t.like(msg.decoded, {
-          event: 'validatorDeposit',
-          validator: '0xf474cf03cceff28abc65c9cbae594f725c80e12d',
-          amount: 2023320000000000,
-          contract: 'BSCValidatorSet',
-        });
+        if (msg.decoded.event === 'CustomEvent') {
+          t.like(msg.decoded, {
+            event: 'CustomEvent',
+            data: '0x0000000000000000000000000000000000000000000000000000000000000001',
+            contract: '0xbfee364456320ac84e78414e32dd2df6f891269b',
+          });
+        } else {
+          t.like(msg.decoded, {
+            event: 'validatorDeposit',
+            validator: '0xf474cf03cceff28abc65c9cbae594f725c80e12d',
+            amount: 2023320000000000,
+            contract: 'BSCValidatorSet',
+            codeAddress: '0x0000000000000000000000000000000000001000',
+          });
+        }
       }
     }
   }
