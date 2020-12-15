@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.3](https://github.com/parsiq/block-tracer/compare/v0.2.2...v0.2.3) (2020-12-15)
+
+
+### Bug Fixes
+
+* correct contract address when decoding logs ([f4d3022](https://github.com/parsiq/block-tracer/commit/f4d30229385033aa4f56d8a7973a3d1855cc52c8))
+
 ### [0.2.2](https://github.com/parsiq/block-tracer/compare/v0.2.1...v0.2.2) (2020-12-15)
 
 
