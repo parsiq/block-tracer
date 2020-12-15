@@ -208,7 +208,7 @@ export function traceTx<T>(
   function* process(item: TraceItem): Generator<TraceMessage<T>> {
     const contract = getContract(item);
     msg = makeMessage(msg, {
-      effective: msg.effective && ('result' in item ? item.result.success : true),
+      effective: msg.effective && ('result' in item ? item.result !== null : true),
       contract,
       op: item.op,
       decoded: decoder(item, contract),

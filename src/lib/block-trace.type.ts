@@ -5,8 +5,8 @@ export type BalanceChange = {
   readonly recvBafter: string;
 };
 
-export type TraceItemResult<T extends boolean> = {
-  readonly success: T;
+export type TraceItemSuccessResult = {
+  readonly success: true;
   readonly data: string;
 };
 
@@ -30,17 +30,17 @@ export type TraceItemCallInfo = {
   readonly value: string;
   readonly gas: string;
   readonly items: readonly TraceItem[];
-  readonly result: TraceItemResult<boolean>;
+  readonly result: TraceItemSuccessResult | null;
   readonly balanceChange: unknown;
 };
 
 export type TraceItemSuccessfulCallInfo = TraceItemCallInfo & {
-  readonly result: TraceItemResult<true>;
+  readonly result: TraceItemSuccessResult;
   readonly balanceChange: BalanceChange;
 };
 
 export type TraceItemFailedCallInfo = TraceItemCallInfo & {
-  readonly result: TraceItemResult<false>;
+  readonly result: null;
   readonly balanceChange: null;
   readonly exception: string;
 };
