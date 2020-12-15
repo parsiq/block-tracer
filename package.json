@@ -1,6 +1,6 @@
 {
   "name": "@parsiq/block-tracer",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "Traverse through block trace to gather events, transfers and other info",
   "main": "build/main/index.js",
   "typings": "build/main/index.d.ts",
