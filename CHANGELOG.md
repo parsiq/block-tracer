@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.4](https://github.com/parsiq/block-tracer/compare/v0.2.3...v0.2.4) (2020-12-16)
+
+
+### Bug Fixes
+
+* check whether subitems are not null, check whether result success is true ([44e5c18](https://github.com/parsiq/block-tracer/commit/44e5c18899ec3e6a365ffd1f5bad129832d4bcd7))
+
 ### [0.2.3](https://github.com/parsiq/block-tracer/compare/v0.2.2...v0.2.3) (2020-12-15)
 
 
