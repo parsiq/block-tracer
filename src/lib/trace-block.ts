@@ -208,7 +208,7 @@ export function traceTx<T>(
   function* process(item: TraceItem): Generator<TraceMessage<T>> {
     const contract = getContract(item);
     msg = makeMessage(msg, {
-      effective: msg.effective && ('result' in item ? item.result !== null : true),
+      effective: msg.effective && ('result' in item ? item.result !== null && item.result.success : true),
       contract,
       op: item.op,
       decoded: decoder(item, contract),
@@ -218,7 +218,7 @@ export function traceTx<T>(
     try {
       if (msg.effective || includeFailed) {
         yield { msg, tx, block };
-        const subItems = 'items' in item ? item.items : [];
+        const subItems = 'items' in item && Array.isArray(item.items) ? item.items : [];
         for (const subItem of subItems) {
           yield* process(subItem);
         }
