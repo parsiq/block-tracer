@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.5](https://github.com/parsiq/block-tracer/compare/v0.2.4...v0.2.5) (2021-02-04)
+
+
+### Features
+
+* add gasRange support ([11c6b59](https://github.com/parsiq/block-tracer/commit/11c6b59d3a6b57076831f99ff34ef998d367e9a1))
+* introduce Decoder interface ([5a5eaf5](https://github.com/parsiq/block-tracer/commit/5a5eaf5df72b62fb33289422c639ff5fedc3ee71))
+
 ### [0.2.4](https://github.com/parsiq/block-tracer/compare/v0.2.3...v0.2.4) (2020-12-16)
 
 
