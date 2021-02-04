@@ -2,13 +2,13 @@ import test from 'ava';
 
 import * as blockTraceFixture from '../fixtures/block-trace.json';
 
-import { BlockTrace, TraceItem } from './block-trace.type';
+import { TraceItem } from './block-trace.type';
 import { traceBlock, traceTx } from './trace-block';
 
 test('trace', (t) => {
   let count = 0;
 
-  for (const transaction of traceBlock(blockTraceFixture as BlockTrace)) {
+  for (const transaction of traceBlock(blockTraceFixture as any)) {
     for (const { msg, tx, block } of traceTx(transaction)) {
       count++;
       t.is(block.hash, '0xa24b24e0ad3973116ad5b0152a261a8419c8772ac226bc430ef25df992d12484');
@@ -55,7 +55,7 @@ test('traces events', (t) => {
     },
   };
 
-  for (const transaction of traceBlock(blockTraceFixture as BlockTrace, traceOptions)) {
+  for (const transaction of traceBlock(blockTraceFixture as any, traceOptions)) {
     for (const { msg } of traceTx(transaction)) {
       if (msg.decoded !== null) {
         if (msg.decoded.event === 'CustomEvent') {

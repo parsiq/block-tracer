@@ -29,6 +29,7 @@
       "gasUsed": "82266",
       "gasLimit": "1000000",
       "gasPrice": "20000000000",
+      "gasRange": [0, 82266],
       "fee": "1645320000000000",
       "origin": "0x011b99cadc2f74c0ef02f67b485d45abcd9cdb9e",
       "nonce": 7375,
@@ -41,6 +42,7 @@
         "data": "0xb2002ef4",
         "value": "0",
         "gas": "",
+        "gasRange": [82166, 82266],
         "balanceChange": {
           "sendBbefore": "1981324487680000000000",
           "sendBafter": "1981324487680000000000",
@@ -55,6 +57,7 @@
             "data": "0x53b6089e",
             "value": "0",
             "gas": "972995",
+            "gasRange": [62166, 72266],
             "balanceChange": {
               "sendBbefore": "1",
               "sendBafter": "1",
@@ -69,6 +72,7 @@
                 "data": "0x274b4379",
                 "value": "0",
                 "gas": "955186",
+                "gasRange": [52166, 62266],
                 "balanceChange": {
                   "sendBbefore": "0",
                   "sendBafter": "0",
@@ -83,6 +87,7 @@
                     "data": "0x0a782e08",
                     "value": "0",
                     "gas": "937747",
+                    "gasRange": [50166, 52266],
                     "balanceChange": {
                       "sendBbefore": "0",
                       "sendBafter": "0",
@@ -102,6 +107,7 @@
                     "data": "0x70a08231000000000000000000000000dd22ef77b1d2b32204a00450e7ae5efe8615043a",
                     "value": "0",
                     "gas": "933345",
+                    "gasRange": [52166, 62266],
                     "balanceChange": {
                       "sendBbefore": "0",
                       "sendBafter": "0",
@@ -135,6 +141,7 @@
                 "data": "0x70a0823100000000000000000000000004687b62d4394876c7fbba2f3bc137d2efa51a24",
                 "value": "0",
                 "gas": "943259",
+                "gasRange": [62166, 72266],
                 "balanceChange": {
                   "sendBbefore": "0",
                   "sendBafter": "0",
@@ -160,6 +167,7 @@
             "data": "0x438f32e4",
             "value": "0",
             "gas": "950997",
+            "gasRange": [62166, 72266],
             "balanceChange": {
               "sendBbefore": "1",
               "sendBafter": "1",
@@ -179,6 +187,7 @@
             "data": "0x941e8e4d0000000000000000000000000000000000000000000000000000000000000001",
             "value": "0",
             "gas": "935483",
+            "gasRange": [62166, 72266],
             "balanceChange": {
               "sendBbefore": "1",
               "sendBafter": "1",
@@ -211,6 +220,7 @@
       "gasUsed": "21000",
       "gasLimit": "21000",
       "gasPrice": "18000000000",
+      "gasRange": [0, 2100],
       "fee": "378000000000000",
       "origin": "0xaa25aa7a19f9c426e07dee59b12f944f4d9f1dd3",
       "nonce": 141283,
@@ -223,6 +233,7 @@
         "data": "0x",
         "value": "6250000000000000000",
         "gas": "",
+        "gasRange": [21000, 21000],
         "balanceChange": {
           "sendBbefore": "8639853764410689000001000",
           "sendBafter": "8639847514410689000001000",
@@ -242,6 +253,7 @@
       "gasUsed": "38582",
       "gasLimit": "9223372036854775807",
       "gasPrice": "0",
+      "gasRange": [0, 38582],
       "fee": "0",
       "origin": "0xf474cf03cceff28abc65c9cbae594f725c80e12d",
       "nonce": 110869,
@@ -254,6 +266,7 @@
         "data": "0xf340fa01000000000000000000000000f474cf03cceff28abc65c9cbae594f725c80e12d",
         "value": "2023320000000000",
         "gas": "",
+        "gasRange": [38582, 38582],
         "balanceChange": {
           "sendBbefore": "27249202000000000000",
           "sendBafter": "27247178680000000000",
@@ -288,6 +301,7 @@
       "sigS": "0x39e6bb812ad70b726da269768df665eb10ccb47b78f7597671a47dfb432369d6",
       "sigR": "0xa3e92cdbafc6fb4e8f6a0c9f343153ea9a77f5abeb3708c48009dc4bad94f9cb",
       "sigV": "0xe5",
+      "gasRange": [0, 201000],
       "item": {
         "op": "CALL",
         "address": "0x61bfa916852f51fc010c9abce0cbcd348ed70b2d",
@@ -301,11 +315,13 @@
           "recvBafter": "8639820012520689000001000"
         },
         "vmDepth": 0,
+        "gasRange": [201000, 201000],
         "items": [
           {
             "op": "SELFDESTRUCT",
             "beneficiary": "0xaa25aa7a19f9c426e07dee59b12f944f4d9f1dd3",
             "value": "6250000000000000000",
+            "gasRange": [200000, 201000],
             "balanceChange": {
               "sendBbefore": "8639826262520689000001000",
               "sendBafter": "0",

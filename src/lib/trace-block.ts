@@ -97,13 +97,14 @@ export type TransactionContext<T> = {
 
 const Transaction = {
   fromTrace<T>(
-    { gasLimit, gasPrice, gasUsed, fee, nonce, origin, sigR, sigS, sigV, txHash }: TransactionTrace,
+    { gasLimit, gasPrice, gasUsed, fee, nonce, origin, sigR, sigS, sigV, txHash, gasRange }: TransactionTrace,
     context: TransactionContext<T>
   ): Transaction<T> {
     return {
       gasLimit,
       gasPrice,
       gasUsed,
+      gasRange,
       origin,
       nonce,
       fee,
@@ -212,6 +213,7 @@ export function traceTx<T>(
       contract,
       op: item.op,
       decoded: decoder(item, contract),
+      gasRange: 'gasRange' in item ? item.gasRange : undefined,
       data: 'data' in item ? item.data : undefined,
       value: 'value' in item ? item.value : undefined,
     });

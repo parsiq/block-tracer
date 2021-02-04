@@ -5,6 +5,8 @@ export type BalanceChange = {
   readonly recvBafter: string;
 };
 
+export type GasRange = readonly [number, number];
+
 export type TraceItemResult<T extends boolean> = {
   readonly success: T;
   readonly data: string;
@@ -29,6 +31,7 @@ export type TraceItemCallInfo = {
   readonly data: string;
   readonly value: string;
   readonly gas: string;
+  readonly gasRange: GasRange;
   readonly items: readonly TraceItem[] | null;
   readonly result: TraceItemResult<boolean> | null;
   readonly balanceChange: unknown;
@@ -58,6 +61,7 @@ export type TransactionBase = {
   readonly sigS: string;
   readonly sigR: string;
   readonly sigV: string;
+  readonly gasRange: GasRange;
 };
 
 export type TransactionTrace = TransactionBase & {
