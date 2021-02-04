@@ -26,9 +26,11 @@ const BlockHeader = {
   },
 };
 
+export type Decoder<T> = (item: TraceItem, contract: string) => T;
+
 export type TraceOptions<T> = {
   includeFailed: boolean;
-  decoder: (item: TraceItem, contract: string) => T;
+  decoder: Decoder<T>;
 };
 
 export type Block<T> = BlockBase & {
