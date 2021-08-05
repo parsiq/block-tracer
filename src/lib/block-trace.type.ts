@@ -52,8 +52,8 @@ export type TraceItemFailedCallInfo = TraceItemCallInfo & {
 export type TraceItem = TraceItemSuccessfulCallInfo | TraceItemFailedCallInfo | TraceItemLog | TraceItemSelfDestruct;
 
 export type TransactionBase = {
-  readonly gasUsed: string;
-  readonly gasLimit: string;
+  readonly gasUsed: number;
+  readonly gasLimit: number;
   readonly gasPrice: string;
   readonly fee: string;
   readonly origin: string;
@@ -62,6 +62,10 @@ export type TransactionBase = {
   readonly sigR: string;
   readonly sigV: string;
   readonly gasRange: GasRange;
+  readonly txType: number;
+  readonly gasTipCap: string;
+  readonly gasFeeCap: string;
+  readonly txnFeeSavings: string;
 };
 
 export type TransactionTrace = TransactionBase & {
@@ -80,7 +84,9 @@ export type BlockBase = {
 };
 
 export type BlockHeader = {
-  readonly gasUsed: string;
+  readonly gasUsed: number;
+  readonly gasLimit: number;
+  readonly baseFeePerGas: string;
   readonly sha3Uncles: string;
   readonly extraData: string;
   readonly mixHash: string;
@@ -97,7 +103,6 @@ export type BlockTrace = {
       readonly blockHash: string;
       readonly parentBlockHash: string;
       readonly blockNumber: number;
-      readonly gasLimit: string;
     };
   readonly rewards: readonly BlockReward[];
   readonly txs: readonly TransactionTrace[];

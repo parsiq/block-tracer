@@ -10,10 +10,24 @@ import {
 
 const BlockHeader = {
   fromTrace({
-    header: { gasUsed, sha3Uncles, extraData, mixHash, nonce, logsBloom, stateRoot, transactionsRoot, receiptsRoot },
+    header: {
+      gasUsed,
+      gasLimit,
+      baseFeePerGas,
+      sha3Uncles,
+      extraData,
+      mixHash,
+      nonce,
+      logsBloom,
+      stateRoot,
+      transactionsRoot,
+      receiptsRoot,
+    },
   }: BlockTrace): BlockHeader {
     return {
       gasUsed,
+      gasLimit,
+      baseFeePerGas,
       sha3Uncles,
       extraData,
       mixHash,
@@ -99,7 +113,23 @@ export type TransactionContext<T> = {
 
 const Transaction = {
   fromTrace<T>(
-    { gasLimit, gasPrice, gasUsed, fee, nonce, origin, sigR, sigS, sigV, txHash, gasRange }: TransactionTrace,
+    {
+      gasLimit,
+      gasPrice,
+      gasUsed,
+      gasFeeCap,
+      gasTipCap,
+      txType,
+      txnFeeSavings,
+      fee,
+      nonce,
+      origin,
+      sigR,
+      sigS,
+      sigV,
+      txHash,
+      gasRange,
+    }: TransactionTrace,
     context: TransactionContext<T>
   ): Transaction<T> {
     return {
@@ -107,6 +137,10 @@ const Transaction = {
       gasPrice,
       gasUsed,
       gasRange,
+      gasFeeCap,
+      gasTipCap,
+      txType,
+      txnFeeSavings,
       origin,
       nonce,
       fee,
