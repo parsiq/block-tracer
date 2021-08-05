@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/parsiq/block-tracer/compare/v0.2.5...v0.3.0) (2021-08-05)
+
+
+### Features
+
+* EIP-1559 tx type & gas fields added ([4b3ff33](https://github.com/parsiq/block-tracer/commit/4b3ff33ba77ccac7f60fc7c461cb134a9d248011))
+
 ### [0.2.5](https://github.com/parsiq/block-tracer/compare/v0.2.4...v0.2.5) (2021-02-04)
 
 
