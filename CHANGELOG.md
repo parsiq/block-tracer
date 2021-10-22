@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.1](https://github.com/parsiq/block-tracer/compare/v0.3.0...v0.3.1) (2021-10-22)
+
+
+### Features
+
+* add optional topics field to the message ([c619126](https://github.com/parsiq/block-tracer/commit/c619126bc8e157ba9c714af318762b795530dd90))
+
 ## [0.3.0](https://github.com/parsiq/block-tracer/compare/v0.2.5...v0.3.0) (2021-08-05)
 
 
