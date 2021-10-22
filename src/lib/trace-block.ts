@@ -94,6 +94,7 @@ export type Message<T> = {
   op: TraceItem['op'];
   decoded: T;
   data?: string;
+  topics?: string[];
   value?: string;
 };
 
@@ -251,6 +252,7 @@ export function traceTx<T>(
       decoded: decoder(item, contract),
       gasRange: 'gasRange' in item ? item.gasRange : undefined,
       data: 'data' in item ? item.data : undefined,
+      topics: 'topics' in item ? item.topics : undefined,
       value: 'value' in item ? item.value : undefined,
     });
     try {
